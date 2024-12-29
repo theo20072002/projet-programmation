@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 import seaborn as sns
 import numpy as np
+import os
 
 convertionEUR_USD=[1.04, 1.05, 1.05, 1.18, 1.14, 1.12, 1.18, 1.13, 1.11, 1.09, 1.3, 1.33, 1.29, 1.39, 1.33, 1.39, 1.47, 1.37, 1.25, 1.18, 1.24, 1.13, 0.95, 0.88, 0.93, 1.06, 1.13, 1.17, 1.22, 1.25, 1.28, 1.3, 1.34, 1.35, 1.55, 0.17, 0.17, 0.17, 0.17, 0.17, 0.17, 0.17, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.19, 0.19, 0.19, 0.2, 0.2, 0.2, 0.2, 0.2, 0.21, 0.21, 0.21, 0.21, 0.21, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23, 0.24, 0.24, 0.24, 0.24, 0.24, 0.24, 0.24, 0.24, 0.24, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193]
 convertionGBP_USD=[1.25, 1.24, 1.22, 1.38, 1.29, 1.3, 1.33, 1.29, 1.35, 1.53, 1.65, 1.56, 1.57, 1.6, 1.55, 1.6, 1.85, 2.0, 1.88, 1.8, 1.83, 1.63, 1.46, 1.43, 1.5, 1.6, 1.63, 1.64, 1.56, 1.55, 1.53, 1.52, 1.54, 1.74, 1.79, 1.78, 1.73, 1.8, 1.56, 1.3, 1.26, 1.31, 1.83, 1.93, 1.92, 1.83, 1.67, 1.62, 1.65, 1.61, 1.83, 2.47, 2.51, 2.62, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 4.03, 4.03, 4.03, 4.03, 4.03, 4.03, 4.03, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 4.75, 4.75, 4.75, 4.75, 4.75, 4.75, 4.86, 4.86, 4.86, 4.86, 4.86]
@@ -392,9 +393,10 @@ for i in valeurs_catégoriels:
     print("le pourcentage d'apparition des valeurs dans la colone "+i+" est la suivante")
     print(df_clean[i].value_counts(dropna=True,normalize=True) * 100)
 
-
-# Calcul de la matrice de corrélation
-correlation_matrix = df_clean_standardized.drop(columns="titre").corr()
+"""
+# Calcul de la matrice de corrélation des variables non binaires
+variables_non_binaires=["Spectateurs","nombre nationalités","Presse","durée","Année de production","log_Box Office France","log_Budget","prix","nominations","nombre_actrice"]
+correlation_matrix = df_clean_standardized[variables_non_binaires].corr()
 
 # Affichage de la matrice de corrélation sous forme de heatmap
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f')
@@ -457,4 +459,8 @@ for lst in (listes_decoupees):
         axes[j].axis('off')
 
     # Afficher la figure
-    plt.show()
+    plt.show()"""
+
+
+# Sauvegarder le DataFrame nettoyé dans un fichier Excel
+df_clean.to_excel("base_de_donnees_nettoyee.xlsx", index=False)
