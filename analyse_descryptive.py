@@ -3,16 +3,18 @@ import requests
 import gender_guesser.detector as gender
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
-import seaborn as sns
 import numpy as np
-import os
+import seaborn as sns
 
+# les deux listes suivantes representes le taux de change entre EUROS et Dollards et Livre sterligns et Dollards en fonction de l'années, 
+# le i eme element représente l'année 2024-i
 convertionEUR_USD=[1.04, 1.05, 1.05, 1.18, 1.14, 1.12, 1.18, 1.13, 1.11, 1.09, 1.3, 1.33, 1.29, 1.39, 1.33, 1.39, 1.47, 1.37, 1.25, 1.18, 1.24, 1.13, 0.95, 0.88, 0.93, 1.06, 1.13, 1.17, 1.22, 1.25, 1.28, 1.3, 1.34, 1.35, 1.55, 0.17, 0.17, 0.17, 0.17, 0.17, 0.17, 0.17, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.19, 0.19, 0.19, 0.2, 0.2, 0.2, 0.2, 0.2, 0.21, 0.21, 0.21, 0.21, 0.21, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23, 0.24, 0.24, 0.24, 0.24, 0.24, 0.24, 0.24, 0.24, 0.24, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193]
 convertionGBP_USD=[1.25, 1.24, 1.22, 1.38, 1.29, 1.3, 1.33, 1.29, 1.35, 1.53, 1.65, 1.56, 1.57, 1.6, 1.55, 1.6, 1.85, 2.0, 1.88, 1.8, 1.83, 1.63, 1.46, 1.43, 1.5, 1.6, 1.63, 1.64, 1.56, 1.55, 1.53, 1.52, 1.54, 1.74, 1.79, 1.78, 1.73, 1.8, 1.56, 1.3, 1.26, 1.31, 1.83, 1.93, 1.92, 1.83, 1.67, 1.62, 1.65, 1.61, 1.83, 2.47, 2.51, 2.62, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 4.03, 4.03, 4.03, 4.03, 4.03, 4.03, 4.03, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 4.75, 4.75, 4.75, 4.75, 4.75, 4.75, 4.86, 4.86, 4.86, 4.86, 4.86]
+#la liste suivante reprensete la valeur actualiser d'un dollars. le i éme élément est la valeur d'un dollars de 2024-i en dollars de 2024
 inflation_USD=[1,1.021, 1.044, 1.077, 1.122, 1.138, 1.164, 1.192, 1.217, 1.233, 1.234, 1.254, 1.273, 1.299, 1.341, 1.362, 1.357, 1.408, 1.449, 1.496, 1.546, 1.588, 1.625, 1.651, 1.697, 1.755, 1.793, 1.822, 1.853, 1.914, 1.968, 2.019, 2.079, 2.142, 2.232, 2.352, 2.465, 2.566, 2.659, 2.688, 2.782, 2.902, 2.994, 3.177, 3.504, 3.977, 4.423, 4.759, 5.068, 5.357, 5.845, 6.488, 6.89, 7.11, 7.416, 7.846, 8.333, 8.691, 8.952, 9.22, 9.368, 9.49, 9.603, 9.7, 9.806, 9.953, 10.053, 10.324, 10.634, 10.73, 10.762, 10.816, 11.67, 11.822, 11.704, 12.652, 14.474, 15.675, 16.036, 16.308, 17.287, 19.171, 20.206, 19.944, 19.944, 19.385, 20.083, 20.364, 20.975, 21.709, 20.602, 18.48, 16.761, 15.689, 14.685, 14.685, 14.523, 14.349, 14.421, 14.709, 14.547, 14.547, 15.449, 13.827, 11.643, 13.366, 15.771, 18.5, 19.961, 19.742, 19.426, 19.426, 19.756, 19.559, 19.559]
 
 #chargement de la base de donnée
-df = pd.read_excel('scrapping_film_vf.xlsx', nrows=10000)
+df = pd.read_excel('scrapping_film_vf.xlsx')
 
 
 # netoyage des données
@@ -50,11 +52,11 @@ def compte_nationalité(ligne):
     nationalités = []
 
     # Vérifier si 'Nationalité' existe et n'est pas vide
-    if pd.notna(ligne["Nationalité"]):
+    if pd.notna(ligne["Nationalité"]) and "inconnue" not in ligne["Nationalité"]:
         nationalités.extend(ligne["Nationalité"].split(','))
 
     # Vérifier si 'Nationalités' existe et n'est pas vide
-    if pd.notna(ligne["Nationalités"]):
+    if pd.notna(ligne["Nationalités"]) and "inconnue" not in ligne["Nationalités"]:
         nationalités.extend(ligne["Nationalités"].split(','))
 
     # Si aucune nationalité n'a été trouvée, retourner None
@@ -119,7 +121,7 @@ for i in range (df_clean.shape[0]): # visiter toutes les lignes
             if j not in genres :
                 genres.append(j)     # ajouter le genre a la liste s'il n'y etait pas
 print(genres)"""
-
+# cette liste a été recuperer via la boucle précedente
 genres =['Comédie', 'Comédie dramatique', 'Drame', 'Aventure', 'Animation', 'Famille', 'Thriller', 'Action', 'Péplum', 'Historique', 'Fantastique', 'Comédie musicale', 'Romance', 'Epouvante-horreur', 'Biopic', 'Musical', 'Science Fiction', 'Guerre', 'Policier', 'Espionnage', 'Western', 'Erotique', 'Arts Martiaux', 'Judiciaire', 'Expérimental', 'Bollywood', 'Évènement Sportif', 'Drama', 'Divers', 'Concert', 'Spectacle', 'Opéra']
 
 #encoder les genres des films,  en créant une nouvelle colone ne contenant que des  et des que genre pour chaque genre
@@ -393,7 +395,7 @@ for i in valeurs_catégoriels:
     print("le pourcentage d'apparition des valeurs dans la colone "+i+" est la suivante")
     print(df_clean[i].value_counts(dropna=True,normalize=True) * 100)
 
-"""
+
 # Calcul de la matrice de corrélation des variables non binaires
 variables_non_binaires=["Spectateurs","nombre nationalités","Presse","durée","Année de production","log_Box Office France","log_Budget","prix","nominations","nombre_actrice"]
 correlation_matrix = df_clean_standardized[variables_non_binaires].corr()
@@ -404,6 +406,7 @@ plt.title('Matrice de Corrélation')
 plt.show()
 
 # representer la relation entre note Spectateur et autres variables non binaire
+# on ce concentre sur ces variables par soucis de lisibilitées
 columns_to_plot = ["nombre nationalités","Presse","durée","Année de production","log_Box Office France","log_Budget","prix","nominations","nombre_actrice"]
 
 # Calculer le nombre de sous-graphes nécessaires
@@ -459,8 +462,20 @@ for lst in (listes_decoupees):
         axes[j].axis('off')
 
     # Afficher la figure
-    plt.show()"""
+    plt.show()
 
+
+
+# on supprime les lignes ou le nombre ou avoir des None est genant
+
+nombre_de_ligne_avant=df_clean.shape[0]
+
+df_clean_complet= df_clean.dropna(subset=['Spectateurs', 'durée', 'Année de production', 'Comédie', 'log_Box Office France'])# on prend pas toute sles valeurs sinon on perd pressque integrallemnt la base de données et il reste moins de 2000 lignes, donc on se concentre sur les champs les plus importants
+
+# on regarde le pourcentage et le nombre de ligne perdu lors de la transformation
+nombre_de_ligne_apres=df_clean_complet.shape[0]
+perte=(nombre_de_ligne_avant-nombre_de_ligne_apres)*100/nombre_de_ligne_avant
+print("la perte d'information concernant le retrait deslignes possédant un None est de "+str(perte)+"  pourcentages, il reste "+ str(nombre_de_ligne_apres)+" lignes dans la data frame")
 
 # Sauvegarder le DataFrame nettoyé dans un fichier Excel
-df_clean.to_excel("base_de_donnees_nettoyee.xlsx", index=False)
+df_clean_complet.to_excel("base_de_donnees_nettoyee.xlsx", index=False)

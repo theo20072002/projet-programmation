@@ -11,10 +11,10 @@ from sklearn.impute import SimpleImputer
 #chargement de la base de donnée
 df = pd.read_excel('base_de_donnees_nettoyee.xlsx')
 
+print (df.info())
 # retirer les outliers
 # Liste des colonnes à vérifier
-colone_a_verifier = [ 'Presse', 'durée', 'Année de production', 'nombre nationalités', 'prix', 'nominations', 'commercialiser', 'Comédie', 'Comédie dramatique', 'Drame', 'Aventure', 'Animation', 'Famille', 'Thriller', 'Action', 'Péplum', 'Historique', 'Fantastique', 'Comédie musicale', 'Romance', 'Epouvante-horreur', 'Biopic', 'Musical', 'Science Fiction', 'Guerre', 'Policier', 'Espionnage', 'Western', 'Erotique', 'Arts Martiaux', 'Judiciaire', 'Expérimental', 'Bollywood', 'Évènement Sportif', 'Drama', 'Divers', 'Concert', 'Spectacle', 'Opéra', 'nombre_actrice', 'pressence_realisatrice', 'log_Budget', 'log_Box Office France']
-
+colone_a_verifier = ['durée', 'prix', 'nominations', 'log_Box Office France']
 # Fonction pour retirer les outliers à l'aide de l'IQR
 def retirer_outliers(df, colones):
     for colone in colones:
@@ -28,15 +28,32 @@ def retirer_outliers(df, colones):
         # Définir les bornes inférieure et supérieure
         borne_inférieure = Q1 - 1.5 * IQR
         borne_supérieure = Q3 + 1.5 * IQR
+        if IQR!=0:
+            # Appliquer le filtrage pour retirer les outliers
+            df = df[(df[colone] >= borne_inférieure) & (df[colone] <= borne_supérieure)]
+    
+    return df
+
+def winsorize(df,colone_a_verifier, borne_inferieur=5, borne_superieur=95):
+    # Applique la transformation sur chaque colonne numérique
+    for colone in colone_a_verifier:
+        # Calculer les percentiles
+        inferieur = np.percentile(df[colone], borne_inferieur)
+        superieur = np.percentile(df[colone], borne_superieur)
         
-        # Appliquer le filtrage pour retirer les outliers
-        df = df[(df[colone] >= borne_inférieure) & (df[colone] <= borne_supérieure)]
+        # Remplacer les valeurs inférieures au percentile inférieur
+        df[colone] = np.where(df[colone] < inferieur, inferieur, df[colone])
+        
+        # Remplacer les valeurs supérieures au percentile supérieur
+        df[colone] = np.where(df[colone] > superieur, superieur, df[colone])
     
     return df
 
 # Appliquer la fonction pour enlever les outliers
-df_sans_outliers = retirer_outliers(df, colone_a_verifier)
+#df_sans_outliers = retirer_outliers(df, colone_a_verifier)
+df_sans_outliers = winsorize(df, colone_a_verifier) #on winsorize ces colones sinon on perd trop d'infos pres de20 % de la base de donnée. il serai taussi interessant d'introduirle champ log de budget mais le nombre de valeurs modifier est trop important pres de 60%
 
+print (df_sans_outliers.info())
 #effectuer un lasso sur notre base de données
 
 # Créer un objet imputer pour imputer les valeurs manquantes par la moyenne
