@@ -124,9 +124,9 @@ print(genres)"""
 # cette liste a été recuperer via la boucle précedente
 genres =['Comédie', 'Comédie dramatique', 'Drame', 'Aventure', 'Animation', 'Famille', 'Thriller', 'Action', 'Péplum', 'Historique', 'Fantastique', 'Comédie musicale', 'Romance', 'Epouvante-horreur', 'Biopic', 'Musical', 'Science Fiction', 'Guerre', 'Policier', 'Espionnage', 'Western', 'Erotique', 'Arts Martiaux', 'Judiciaire', 'Expérimental', 'Bollywood', 'Évènement Sportif', 'Drama', 'Divers', 'Concert', 'Spectacle', 'Opéra']
 
-#encoder les genres des films,  en créant une nouvelle colone ne contenant que des  et des que genre pour chaque genre
+#encoder les genres des films,  en créant une nouvelle colonne ne contenant que des  et des que genre pour chaque genre
 
-for i in genres: # créer une colone pour chaque genre dans notre data frame
+for i in genres: # créer une colonne pour chaque genre dans notre data frame
     df_clean[i] = 0
 
 def attribuer_genre(ligne):
@@ -135,12 +135,12 @@ def attribuer_genre(ligne):
         texte_split=texte.split(",")  # recupérer tous les genres du film
         for j in texte_split :
             j = j.strip()
-            ligne[j] = 1 # mettre a 1 la colone du genre j si le film est de genre j
+            ligne[j] = 1 # mettre a 1 la colonne du genre j si le film est de genre j
     else : # Mettre a None les lignes ou on a pas d'infos
         for j in genres:
             ligne[j]=None
     return ligne
-#on applique la fonction a chaque ligne pour mettre a 1 les colones du genre du film
+#on applique la fonction a chaque ligne pour mettre a 1 les colonnes du genre du film
 df_clean=df_clean.apply(attribuer_genre, axis=1)
 
 
@@ -231,7 +231,7 @@ nombre_ligne_realisateurs_None_apres_transformation=int(df_clean["pressence_real
 perte=(nombre_ligne_realisateurs_None_apres_transformation-nombre_ligne_realisateurs_None_avant_transformation)*100/df_clean.shape[0]
 print("la perte d'information concernant la tranformation du champ genre des realisateurs est de "+str(perte)+" point de pourcentage")
 
-#transformer la colone couleur en une colone de 0 et 1, ou 1 represente la presence de couleur et 0 l'absence. 
+#transformer la colonne couleur en une colonne de 0 et 1, ou 1 represente la presence de couleur et 0 l'absence. 
 def tranformation_couleur(ligne):
     if pd.notna(ligne["Couleur"]) and ligne["Couleur"]!="-":#on verifie qu'on a l'information sur la couleur du film
         if "ouleur" in ligne["Couleur"]: # si le film est en couleur on lui associe la valeur 1
