@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 import seaborn as sns
 
-# les deux listes suivantes representes le taux de change entre EUROS et Dollards et Livre sterligns et Dollards en fonction de l'années, 
+# les deux listes suivantes representent le taux de change entre EUROS et Dollards et Livre sterligns et Dollards en fonction de l'années, 
 # le i eme element représente l'année 2024-i
 convertionEUR_USD=[1.04, 1.05, 1.05, 1.18, 1.14, 1.12, 1.18, 1.13, 1.11, 1.09, 1.3, 1.33, 1.29, 1.39, 1.33, 1.39, 1.47, 1.37, 1.25, 1.18, 1.24, 1.13, 0.95, 0.88, 0.93, 1.06, 1.13, 1.17, 1.22, 1.25, 1.28, 1.3, 1.34, 1.35, 1.55, 0.17, 0.17, 0.17, 0.17, 0.17, 0.17, 0.17, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.18, 0.19, 0.19, 0.19, 0.2, 0.2, 0.2, 0.2, 0.2, 0.21, 0.21, 0.21, 0.21, 0.21, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.22, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23, 0.24, 0.24, 0.24, 0.24, 0.24, 0.24, 0.24, 0.24, 0.24, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193, 0.193]
 convertionGBP_USD=[1.25, 1.24, 1.22, 1.38, 1.29, 1.3, 1.33, 1.29, 1.35, 1.53, 1.65, 1.56, 1.57, 1.6, 1.55, 1.6, 1.85, 2.0, 1.88, 1.8, 1.83, 1.63, 1.46, 1.43, 1.5, 1.6, 1.63, 1.64, 1.56, 1.55, 1.53, 1.52, 1.54, 1.74, 1.79, 1.78, 1.73, 1.8, 1.56, 1.3, 1.26, 1.31, 1.83, 1.93, 1.92, 1.83, 1.67, 1.62, 1.65, 1.61, 1.83, 2.47, 2.51, 2.62, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 2.8, 4.03, 4.03, 4.03, 4.03, 4.03, 4.03, 4.03, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 4.86, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 4.75, 4.75, 4.75, 4.75, 4.75, 4.75, 4.86, 4.86, 4.86, 4.86, 4.86]
@@ -22,7 +22,7 @@ df = pd.read_excel('scrapping_film_vf.xlsx')
 
 df_clean=df[["titre","Presse", "Spectateurs","Realisateur","genre","acteur","durée","Nationalité","Récompense","Année de production","Date de sortie DVD","Date de sortie Blu-ray","Date de sortie VOD","Box Office France","Budget","Couleur","Récompenses", "Nationalités"]]
 
-#transformer durée en entier representant la duré minutes
+#convertir la durée du film en minute
 def convertion_durée(durée):
     if durée==None: # on verifie que la donnée n'est pas absente
         return None
@@ -78,7 +78,7 @@ def compte_nominations(ligne):
         if "nomination" in ligne["Récompenses"]:
             nombre_nominations = int(texte[-2].strip())  # Récupérer l'avant-dernière valeur comme etant le nombre de nominations
         if "pri"in ligne["Récompenses"]:
-            if "#" in ligne["Récompenses"]: # on fait attentions aux cas ou 1 seul prix est attribué prensent sou sla forme #prix dans la base de donnée
+            if "#" in ligne["Récompenses"]: # on fait attention aux cas ou 1 seul prix est attribué prensent sous la forme #prix dans la base de donnée
                 nombre_prix= 1
                 nombre_nominations+=1 # pour recevoir un prix faut avoir été nominé
             else:
@@ -124,23 +124,23 @@ print(genres)"""
 # cette liste a été recuperer via la boucle précedente
 genres =['Comédie', 'Comédie dramatique', 'Drame', 'Aventure', 'Animation', 'Famille', 'Thriller', 'Action', 'Péplum', 'Historique', 'Fantastique', 'Comédie musicale', 'Romance', 'Epouvante-horreur', 'Biopic', 'Musical', 'Science Fiction', 'Guerre', 'Policier', 'Espionnage', 'Western', 'Erotique', 'Arts Martiaux', 'Judiciaire', 'Expérimental', 'Bollywood', 'Évènement Sportif', 'Drama', 'Divers', 'Concert', 'Spectacle', 'Opéra']
 
-#encoder les genres des films,  en créant une nouvelle colone ne contenant que des  et des que genre pour chaque genre
+#encoder les genres des films,  en créant une nouvelle colonne ne contenant que des  et des que genre pour chaque genre
 
-for i in genres: # créer une colone pour chaque genre dans notre data frame
+for i in genres: # créer une colonne pour chaque genre dans notre data frame
     df_clean[i] = 0
 
 def attribuer_genre(ligne):
-    if pd.notna(ligne["genre"]): # verifier que l'information sur le genre est non nuls
+    if pd.notna(ligne["genre"]): # verifier que l'information sur le genre est non nul
         texte=ligne.loc["genre"] 
         texte_split=texte.split(",")  # recupérer tous les genres du film
         for j in texte_split :
             j = j.strip()
-            ligne[j] = 1 # mettre a 1 la colone du genre j si le film est de genre j
+            ligne[j] = 1 # mettre a 1 la colonne du genre j si le film est de genre j
     else : # Mettre a None les lignes ou on a pas d'infos
         for j in genres:
             ligne[j]=None
     return ligne
-#on applique la fonction a chaque ligne pour mettre a 1 les colones du genre du film
+#on applique la fonction a chaque ligne pour mettre a 1 les colonnes du genre du film
 df_clean=df_clean.apply(attribuer_genre, axis=1)
 
 
@@ -172,7 +172,7 @@ def get_gender_from_wikipedia(ligne):
         return nombre_actrices
     return None
 
-# on appliqu ela fonction à chaque ligne du data frame
+# on applique la fonction à chaque ligne du data frame
 #df_clean["sex_acteur"] = df_clean.apply(get_gender_from_wikipedia, axis=1)
 
 # seconde méthode en utilisant un module python pour determiner le sex a partir du prenom des acteurs. Méthode moins exacte que la premiére mais plus rapide. 
@@ -181,7 +181,7 @@ d = gender.Detector()
 
 # Fonction pour obtenir le sexe
 def get_gender_acteur(ligne):
-    if pd.notna(ligne["acteur"]): # verifier que l'informationde la ligne concernant les acteurs est existente
+    if pd.notna(ligne["acteur"]): # verifier que l'information de la ligne concernant les acteurs est existente
         acteurs=ligne["acteur"].split(",")
         acteurs[0]=acteurs[0].replace("Avec", "")
         nombre_actrices=0
@@ -207,12 +207,12 @@ print("la perte d'information concernant la tranformation du champ genre des act
 
 #Savoir si le film posséde une réalisatrice
 def get_gender_Realisateur(ligne):
-    if pd.notna(ligne["Realisateur"]): # verifier que l'informationde la ligne concernant les acteurs est existente
+    if pd.notna(ligne["Realisateur"]): # verifier que l'informationde la ligne concernant les réalisateurs est existente
         realisateurs=ligne["Realisateur"].split(",")
         realisateurs[0]=realisateurs[0].replace("De", "")
         sex_incertain= False
         for i in realisateurs:
-            prenom_realisateur=i.strip().split(" ")# on conserve que le prenom de l'acteur
+            prenom_realisateur=i.strip().split(" ")# on conserve que le prenom du réalisateur
             sex=d.get_gender(prenom_realisateur[0])
             if "female" in sex :
                 return 1
@@ -231,7 +231,7 @@ nombre_ligne_realisateurs_None_apres_transformation=int(df_clean["pressence_real
 perte=(nombre_ligne_realisateurs_None_apres_transformation-nombre_ligne_realisateurs_None_avant_transformation)*100/df_clean.shape[0]
 print("la perte d'information concernant la tranformation du champ genre des realisateurs est de "+str(perte)+" point de pourcentage")
 
-#transformer la colone couleur en une colone de 0 et 1, ou 1 represente la presence de couleur et 0 l'absence. 
+#transformer la colonne couleur en une colonne de 0 et 1, ou 1 represente la presence de couleur et 0 l'absence. 
 def tranformation_couleur(ligne):
     if pd.notna(ligne["Couleur"]) and ligne["Couleur"]!="-":#on verifie qu'on a l'information sur la couleur du film
         if "ouleur" in ligne["Couleur"]: # si le film est en couleur on lui associe la valeur 1
@@ -269,7 +269,7 @@ infos_manquante_Box_Office_apres=df_clean["Box Office France"].isna().sum()
 perte=(infos_manquante_Box_Office_apres-infos_manquante_Box_Office_avant)*100/df_clean.shape[0]
 print("la perte d'information concernant la tranformation du champ Box Office en France est de "+str(perte)+" point de pourcentage")
 
-#normaliser les budgets sur le même monnaie
+#normaliser les budgets sur la même monnaie
 def convertion_monetaire(ligne):
     if pd.notna(ligne["Budget"]) and ligne["Budget"]!="-" and pd.notna(ligne["Année de production"]):
         texte=ligne["Budget"].strip()
@@ -326,7 +326,7 @@ df_clean["log_Budget"] = np.log(df_clean["Budget"])
 df_clean["log_Box Office France"] = np.log(df_clean["Box Office France"])
 
 
-#transformer des colones de float en int
+#transformer des colonnes de float en int
 df_clean["Année de production"]=df_clean["Année de production"].astype('Int64')
 df_clean["nombre nationalités"]=df_clean["nombre nationalités"].astype('Int64')
 df_clean["commercialiser"]=df_clean["commercialiser"].astype('Int64')
@@ -335,7 +335,7 @@ df_clean["nombre_actrice"]=df_clean["nombre_actrice"].astype('Int64')
 df_clean["pressence_realisatrice"]=df_clean["pressence_realisatrice"].astype('Int64')
 
 print(df_clean["Thriller"].isna().sum())
-#supprimer les colones dont on a plus besoin
+#supprimer les colonnes dont on a plus besoin
 df_clean.drop(columns=["Box Office France","Budget","genre","Realisateur","acteur","Nationalité","Récompense","Date de sortie DVD","Date de sortie Blu-ray","Date de sortie VOD","Couleur","Récompenses", "Nationalités"], inplace=True)
 
 
@@ -343,12 +343,12 @@ df_clean.drop(columns=["Box Office France","Budget","genre","Realisateur","acteu
 print("voici les 5 premiéres lignes de la data frame netoyer")
 print(df_clean.head())
 
-# afficher les infos relative aux colones
-print("les informations concernant les types et le nombre de valeurs non nuls de chaque colones sont les suivantes")
+# afficher les infos relative aux colonnes
+print("les informations concernant les types et le nombre de valeurs non nuls de chaque colonnes sont les suivantes")
 print(df_clean.info())
-print("les informations concernant l'analyse statistique de chaque colones sont les suivantes")
+print("les informations concernant l'analyse statistique de chaque colonnes sont les suivantes")
 print(df_clean.describe().round(2).transpose())
-print("Pour chaque colone voici le pourcentage d'informations manquantes")
+print("Pour chaque colonne voici le pourcentage d'informations manquantes")
 print(df_clean.isnull().mean() * 100)
 
 # visualisation des repartitions de nos variables sous forme d'histogramme 
@@ -361,7 +361,7 @@ scaler = StandardScaler()
 variables_a_normaliser=["nombre nationalités","Presse","Spectateurs","durée","Année de production","log_Box Office France","log_Budget","prix","nominations","nombre_actrice"]
 df_clean_standardized = df_clean.copy(deep=True)
 df_clean_standardized[variables_a_normaliser]=scaler.fit_transform(df_clean_standardized[variables_a_normaliser])
-print("les valeurs une fois standardiser prenne tla forme suivante")
+print("les valeurs une fois standardiser prennent la forme suivante")
 print(df_clean_standardized.describe())
 
 # visualisation des repartitions de nos variables sous forme de boxplot 
@@ -388,11 +388,11 @@ valeurs_catégoriels=["prix","nominations","nombre_actrice", "nombre nationalit�
 
 for i in valeurs_catégoriels:
     # Fréquence des valeurs dans une colonne catégorielle
-    print("la fréquence d'apparition des valeurs dans la colone "+i+" est la suivante")
+    print("la fréquence d'apparition des valeurs dans la colonne "+i+" est la suivante")
     print(df_clean[i].value_counts(dropna=True))
 
     # Pourcentage de chaque catégorie
-    print("le pourcentage d'apparition des valeurs dans la colone "+i+" est la suivante")
+    print("le pourcentage d'apparition des valeurs dans la colonne "+i+" est la suivante")
     print(df_clean[i].value_counts(dropna=True,normalize=True) * 100)
 
 
