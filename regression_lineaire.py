@@ -91,7 +91,7 @@ print(f"Mean Squared Error (MSE): {mse}")
 print(f"R² Score: {r2}")
 
 # Visualiser les coefficients associer a cette alpha optimal
-meilleur_lasso = grid_search.best_estimator_ # recuperer le lasso associer au meilleur alpha
+meilleur_lasso = grid_search.best_estimator_ # recuperer le lasso associé au meilleur alpha
 coefficients = meilleur_lasso.coef_# recuperer les coeficients
 coef = pd.DataFrame({
     "variables": v_explicatives_test_scaled.columns,  # Noms des colonnes
@@ -110,7 +110,7 @@ plt.show()
 
 # effectuer la regression linéaire sur les variables selectioner par le lasso
 
-# selectionnenr les variables selectionner par le lasso
+# selectionnenr les variables selectionné par le lasso
 v_explicatives_test_cut=v_explicatives_test[coef["variables"]]
 v_explicatives_train_cut=v_explicatives_train[coef["variables"]]
 
